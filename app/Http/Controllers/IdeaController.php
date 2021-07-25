@@ -14,7 +14,7 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        $ideas = Idea::simplePaginate(10);
+        $ideas = Idea::simplePaginate(Idea::PAGINATION_COUNT);
         return view('idea.index')->with(compact('ideas'));
     }
 
