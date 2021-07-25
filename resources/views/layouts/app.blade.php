@@ -50,7 +50,28 @@
        </header>
        <main class="container mx-auto flex max-w-custom">
             <div class="w-70 mr-5">
-            Add idea form goes here. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptates accusantium non voluptate, officiis tempora dignissimos voluptatem rem eveniet quidem amet odio perferendis saepe magni repellat eius quis ad enim dolorem!
+                <div class="bg-white border-2 border-blue rounded-xl mt-16 px-3 py-3">
+                    <div class="text-center px-6 py-2 pt-6">
+                        <h3 class="font-semibold text-base">Add an idea</h3>
+                        <p class="text-xs mt-4">Let us know what you would like and we'll take a look.</p>
+                    </div>
+                    <form action="#" method="POST" class="space-y-4 px-4 py-6">
+                        <div>
+                            <input type="text" class="w-full bg-gray-100 rounded-xl placeholder-gray-900 border-none text-sm" placeholder="Your idea">
+                        </div>
+                        <div>
+                            <select name="category" id="category" class="w-full rounded-xl px-4 py-2 border-none bg-gray-100 text-sm">
+                                <option value="category-one">Category One</option>
+                                <option value="category-twp">Category Two</option>
+                                <option value="category-three">Category Three</option>
+                                <option value="category-four">Category Four</option>
+                            </select>
+                        </div>
+                        <div>
+                            <textarea name="idea" id="idea" cols="30" rows="4" class="w-full bg-grey-100 rounded-xl placeholder-gray-900 text-sm border-none"></textarea>
+                        </div>
+                    </form>
+                 </div>
             </div>
             <div class="w-175">
                 <nav class="flex justify-between items-center text-xs">

@@ -7,14 +7,12 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
-
     theme: {
         extend: {
             colors: {
                 'grey-background': '#f7f8fc',
                 transparent: 'transparent',
                 current: 'currentColor',
-          
                 black: colors.black,
                 white: colors.white,
                 gray: colors.trueGray,
@@ -35,14 +33,18 @@ module.exports = {
             fontFamily: {
                 sans: ['Open sans', ...defaultTheme.fontFamily.sans],
             },
+            fontSize: {
+                xxs: ['0.625rem', { lineHeight: '1rem' }],
+            },
         },
     },
-
     variants: {
         extend: {
             opacity: ['disabled'],
         },
     },
-
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('@tailwindcss/line-clamp'),
+    ],
 };
