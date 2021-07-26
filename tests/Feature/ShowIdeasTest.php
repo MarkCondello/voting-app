@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Idea;
+use App\Models\Category;
 
 class ShowIdeasTest extends TestCase
 {
@@ -13,48 +14,62 @@ class ShowIdeasTest extends TestCase
 
     public function test_list_of_ideas_shows_on_main_page()
     {
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $catTwo = Category::factory()->create(['name' => 'Cat 2']);
+
         $idea1 = Idea::factory()->create([
             'title' => "My first Idea",
             'description' => "Description of my first idea.",
+            'category_id' => $catOne->id,
         ]);
         $idea2 = Idea::factory()->create([
             'title' => "My second Idea",
             'description' => "Description of my second idea.",
+            'category_id' => $catTwo->id,
         ]);
 
         $response = $this->get(route('idea.index'));
         $response->assertSuccessful();
         $response->assertSee($idea1->title);
         $response->assertSee($idea1->description);
+        $response->assertSee($catOne->name);
         $response->assertSee($idea2->title);
         $response->assertSee($idea2->description);
+        $response->assertSee($catTwo->name);
     }
 
     public function test_single_ideas_shows_on_show_page()
     {
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+
         $idea = Idea::factory()->create([
             'title' => "My first Idea",
             'description' => "Description of my first idea.",
+            'category_id' => $catOne->id,
         ]);
  
         $response = $this->get(route('idea.show', $idea));
         $response->assertSuccessful();
         $response->assertSee($idea->title);
         $response->assertSee($idea->description);
+        $response->assertSee($catOne->name);
     }
 
 
     public function test_slugs_are_unique( )
     {
-        # code...
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+
         $ideaOne = Idea::factory()->create([
             'title' => "First idea",
             'description' => "This is the first ideas description",
+            'category_id' => $catOne->id,
         ]);
 
         $ideaTwo = Idea::factory()->create([
             'title' => "First idea",
             'description' => "This is the second ideas description",
+            'category_id' => $catOne->id,
         ]);
 
         $response = $this->get(route('idea.show', $ideaOne));
@@ -63,7 +78,7 @@ class ShowIdeasTest extends TestCase
 
         $response = $this->get(route('idea.show', $ideaTwo));
         $response->assertSuccessful();
-        // dd($ideaTwo->slug);
+        //  dd($ideaTwo->slug);
         $this->assertTrue(request()->path() === 'ideas/first-idea-2');
         $this->assertTrue( $ideaTwo->slug === 'first-idea-2');
 
