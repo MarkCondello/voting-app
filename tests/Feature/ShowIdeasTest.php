@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Idea;
 use App\Models\Category;
+use App\Models\Status;
 
 class ShowIdeasTest extends TestCase
 {
@@ -17,15 +18,20 @@ class ShowIdeasTest extends TestCase
         $catOne = Category::factory()->create(['name' => 'Cat 1']);
         $catTwo = Category::factory()->create(['name' => 'Cat 2']);
 
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
+        $statusClosed = Status::factory()->create(['name' => 'Closed', 'classes' => 'bg-red text-white']);
+        
         $idea1 = Idea::factory()->create([
             'title' => "My first Idea",
             'description' => "Description of my first idea.",
             'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
         ]);
         $idea2 = Idea::factory()->create([
             'title' => "My second Idea",
             'description' => "Description of my second idea.",
             'category_id' => $catTwo->id,
+            'status_id' => $statusClosed->id,
         ]);
 
         $response = $this->get(route('idea.index'));
@@ -36,16 +42,21 @@ class ShowIdeasTest extends TestCase
         $response->assertSee($idea2->title);
         $response->assertSee($idea2->description);
         $response->assertSee($catTwo->name);
+// More specific assertSee to prevent false positives, because there are other status labels on the page
+        $response->assertSee('<div class="bg-green text-white text-xxs font-bold uppercase leading-none rounded-full text-center w-28 h-7 py-2 px-4">Implementing</div>', false);
+        $response->assertSee('<div class="bg-red text-white text-xxs font-bold uppercase leading-none rounded-full text-center w-28 h-7 py-2 px-4">Closed</div>', false);
     }
 
     public function test_single_ideas_shows_on_show_page()
     {
         $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
 
         $idea = Idea::factory()->create([
             'title' => "My first Idea",
             'description' => "Description of my first idea.",
             'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
         ]);
  
         $response = $this->get(route('idea.show', $idea));
@@ -53,23 +64,27 @@ class ShowIdeasTest extends TestCase
         $response->assertSee($idea->title);
         $response->assertSee($idea->description);
         $response->assertSee($catOne->name);
-    }
 
+        $response->assertSee('<div class="bg-green text-white text-xxs font-bold uppercase leading-none rounded-full text-center w-28 h-7 py-2 px-4">Implementing</div>', false);
+    }
 
     public function test_slugs_are_unique( )
     {
         $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
 
         $ideaOne = Idea::factory()->create([
             'title' => "First idea",
             'description' => "This is the first ideas description",
             'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
         ]);
 
         $ideaTwo = Idea::factory()->create([
             'title' => "First idea",
             'description' => "This is the second ideas description",
             'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
         ]);
 
         $response = $this->get(route('idea.show', $ideaOne));
