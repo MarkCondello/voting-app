@@ -1,5 +1,4 @@
 <div class="idea-and-buttons-container">
-
     <div class="idea-container bg-white rounded-xl flex mt-4">
         <div class="flex flex-col md:flex-row flex-1 px-4 py-6">
             <div class="flex-none mx-2 md:mx-4">
@@ -12,7 +11,6 @@
                     <a href="#" class="hover:underline">{{ $idea->title }}</a>
                 </h4>
                 <div class="text-gray-600 mt-3">{{ $idea->description }}</div>
-
                 <div class="flex flex-col md:flex-row md:items-center justify-between mt-6">
                     <div class="flex items-center text-xs text-gray-400 font-semibold space-x-2">
                         <div class="hidden md:block font-bold text-gray-900">{{ $idea->user->name }}</div>
