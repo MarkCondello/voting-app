@@ -58,4 +58,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Idea::class);
     }
+
+    public function votes()
+    {
+        return $this->belongsToMany(Idea::class, 'votes');
+        //'votes' is the pivot table for both users and ideas, so this relationship is a vote belongs to many
+    }
 }

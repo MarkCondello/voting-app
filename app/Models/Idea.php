@@ -37,4 +37,10 @@ class Idea extends Model
     {
         return $this->belongsTo(Status::class);
     }
+
+    public function votes()
+    {
+        return $this->belongsToMany(User::class, 'votes');
+        //'votes' is the pivot table for both users and ideas, so this relationship is a vote belongs to many
+    }
 }
