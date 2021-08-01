@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Models\Idea;
 use App\Models\Category;
 use App\Models\Status;
+use App\Models\User;
 
 class ShowIdeasTest extends TestCase
 {
@@ -98,27 +99,28 @@ class ShowIdeasTest extends TestCase
         $this->assertTrue( $ideaTwo->slug === 'first-idea-2');
 
     }
-    // public function test_ideas_pagination_works( )
-    // {
-    //     # code...
-    //     Idea::factory(Idea::PAGINATION_COUNT + 1)->create();
+    public function test_ideas_pagination_works( )
+    {
+        # code...
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
 
-    //     $idea1 = Idea::find(1);
+        // dd($catOne, $statusImplementing);
+        Idea::factory(Idea::PAGINATION_COUNT + 1)->create([
+            'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
+        ]);
 
-    //     // $idea1->title = "My first idea";
-    //     // $idea1->save();
-    //     // dd($idea1);
-    //     $idea11 = Idea::find(11);
-    //     // $idea11->title = "My eleventh idea";
-    //     // $idea11->save();
+        $idea1 = Idea::first();
+        $idea11 = Idea::find(11);
+ 
+        $response = $this->get('/');
+        $response->assertSee($idea11->title);
+        $response->assertDontSee($idea1->title);
 
-    //     $response = $this->get('/');
-    //     $response->assertSee($idea1->title);
-    //     $response->assertDontSee($idea11->title);
-
-    //     $response = $this->get('/?page=2');
-    //     $response->assertDontSee($idea1->title);
-    //     $response->assertSee($idea11->title);
-    // }
+        $response = $this->get('/?page=2');
+        $response->assertDontSee($idea11->title);
+        $response->assertSee($idea1->title);
+    }
 
 }

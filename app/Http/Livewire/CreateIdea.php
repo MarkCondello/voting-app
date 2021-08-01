@@ -12,6 +12,7 @@ class CreateIdea extends Component
     public $title;
     public $category = 1;
     public $description;
+    public $status = 1;
 
     protected $rules = [
         'title' => 'required|min:4',
@@ -35,7 +36,7 @@ class CreateIdea extends Component
                 'category_id' => $this->category,
                 'title' => $this->title,
                 'description' => $this->description,
-                'status_id' => 1,
+                'status_id' => $this->status,
                 ]
             );
             session()->flash('success_message', 'Idea was added successfully');
