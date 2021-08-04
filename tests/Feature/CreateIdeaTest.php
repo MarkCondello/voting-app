@@ -64,6 +64,7 @@ class CreateIdeaTest extends TestCase
             ->test(CreateIdea::class)
             ->set('title', 'My First Idea')
             ->set('category', $catOne->id)
+            ->set('status', $statusImplementing->id)
             ->set('description', 'This is my first idea')
             ->call('createIdea')
             ->assertRedirect('/');

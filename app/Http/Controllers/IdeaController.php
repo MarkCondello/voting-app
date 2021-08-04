@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Idea;
 use Illuminate\Http\Request;
+use App\Models\Vote;
 
 class IdeaController extends Controller
 {
@@ -15,6 +16,10 @@ class IdeaController extends Controller
     public function index()
     {
         $ideas = Idea::with('user', 'category', 'status')
+            ->addSelect(['voted_by_user' => Vote::select('id')
+                ->where('user_id', auth()->id())
+                ->whereColumn('idea_id', 'ideas.id')
+            ])
             ->withCount('votes as votes')
             ->orderBy('id', 'desc')
             // ->take(3)->get();
@@ -53,6 +58,12 @@ class IdeaController extends Controller
     public function show(Idea $idea)
     {
         $votes = $idea->votes()->count();
+
+        // $idea = Idea::addSelect(['voted_by_user' => Vote::select('id')
+        //         ->where('user_id', auth()->id())
+        //         ->whereColumn('idea_id', 'ideas.id')
+        // ]);
+
         return view('idea.show')
             ->with(compact('idea', 'votes'));
     }
