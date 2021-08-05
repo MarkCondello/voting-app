@@ -39,6 +39,63 @@ class IdeaTest extends TestCase
         $this->assertTrue($idea->isVotedByUser($user));
         $this->assertFalse($idea->isVotedByUser($userB));
         $this->assertFalse($idea->isVotedByUser(null));
+    }
 
+    public function test_user_can_vote_for_an_idea()
+    {
+        $user = User::factory()->create([
+            'name' => 'MarkCond',
+            'email' => 'condellomark@gmail.com',
+        ]);
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
+        $idea = Idea::factory()->create([
+            'user_id' => $user->id,
+            'title' => "My first Idea",
+            'description' => "Description of my first idea.",
+            'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
+        ]);
+
+        $idea->vote($user);
+
+        $this->assertDatabaseHas('votes', [
+            'idea_id' => $idea->id,
+            'user_id' => $user->id
+        ]);
+    }
+
+    public function test_user_can_remove_vote_for_an_idea()
+    {
+        $user = User::factory()->create([
+            'name' => 'MarkCond',
+            'email' => 'condellomark@gmail.com',
+        ]);
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
+        $idea = Idea::factory()->create([
+            'user_id' => $user->id,
+            'title' => "My first Idea",
+            'description' => "Description of my first idea.",
+            'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
+        ]);
+
+        Vote::factory()->create([
+            'idea_id' => $idea->id,
+            'user_id' => $user->id
+        ]);
+        $this->assertDatabaseHas('votes', [
+            'idea_id' => $idea->id,
+            'user_id' => $user->id
+        ]);
+
+        $idea->removeVote($user);
+
+        $this->assertDatabaseMissing('votes', [
+            'idea_id' => $idea->id,
+            'user_id' => $user->id
+        ]);
+     
     }
 }

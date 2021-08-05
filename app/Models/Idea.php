@@ -55,4 +55,19 @@ class Idea extends Model
         return $this->belongsToMany(User::class, 'votes');
         //'votes' is the pivot table for both users and ideas, so this relationship is a vote belongs to many
     }
+    public function vote(User $user)
+    {
+        Vote::create([
+            'idea_id' => $this->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
+    public function removeVote(User $user)
+    {
+        Vote::where('idea_id',$this->id)
+            ->where('user_id', $user->id)
+            ->first()
+            ->delete();
+     }
 }

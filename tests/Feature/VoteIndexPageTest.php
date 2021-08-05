@@ -124,4 +124,38 @@ class VoteIndexPageTest extends TestCase
     //         ->assertSet('hasVoted', true)
     //         ->assertSee('Voted');
     // }
+
+    public function test_user_is_logged_in_can_vote_for_idea()
+    {
+        $user = User::factory()->create();
+        $catOne = Category::factory()->create(['name' => 'Cat 1']);
+        $statusImplementing = Status::factory()->create(['name' => 'Implementing', 'classes' => 'bg-green text-white']);
+        $idea = Idea::factory()->create([
+            'user_id' => $user->id,
+            'title' => "My first Idea",
+            'description' => "Description of my first idea.",
+            'category_id' => $catOne->id,
+            'status_id' => $statusImplementing->id,
+        ]);
+
+        $this->assertDatabaseMissing('votes',[
+            'idea_id' => $idea->id,
+            'user_id' => $user->id,
+        ]);
+
+        Livewire::actingAs($user)
+            ->test(IdeaIndex::class,[
+                'idea' => $idea,
+                'votes' => 5,
+            ])
+            ->call('vote')
+            ->assertSet('votes', 6)
+            ->assertSet('hasVoted', true)
+            ->assertSee('Voted');
+
+            $this->assertDatabaseHas('votes',[
+                'idea_id' => $idea->id,
+                'user_id' => $user->id,
+            ]);
+    }
 }
