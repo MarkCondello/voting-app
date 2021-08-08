@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Idea;
+use App\Exceptions\VoteNotFoundException;
 
 class IdeaShow extends Component
 {
@@ -23,11 +24,20 @@ class IdeaShow extends Component
             return redirect(route('login'));
         }
         if($this->hasVoted){
-            $this->idea->removeVote(auth()->user());
-            $this->votes--;
-            $this->hasVoted = false;
+            try {
+                $this->idea->removeVote(auth()->user());
+            } catch(VoteNotFoundException $e){
+                //do nothing
+            }
+                $this->votes--;
+                $this->hasVoted = false;
         } else {
-            $this->idea->vote(auth()->user());
+            try {
+                $this->idea->vote(auth()->user());
+            } catch(VoteNotFoundException $e){
+                //do nothing
+            }
+            // $this->idea->vote(auth()->user());
             $this->votes++;
             $this->hasVoted = true;
         }
