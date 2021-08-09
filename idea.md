@@ -1,0 +1,1 @@
+Consider making the alternative implementations suggested in episode 22

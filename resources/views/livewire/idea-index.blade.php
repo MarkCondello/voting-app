@@ -5,7 +5,6 @@
     const target = clicked.tagName.toLowerCase();
     const ignores = ['button', 'svg', 'path', 'a', 'li', 'ul'];
     if(! ignores.includes(target)){
-        <!-- console.log(target); -->
         clicked.closest('.idea-container').querySelector('.idea-link').click();
     }"
     class="idea-container hover:shadow-card transition duration-150 ease-in bg-white rounded-xl flex cursor-pointer">
