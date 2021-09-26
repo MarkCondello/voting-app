@@ -16,11 +16,13 @@ class IdeasIndex extends Component
     public $status = 'All';
     public $category;
     public $filter;
+    public $search;
 
     protected $queryString = [  //how does this $queryString array work to populate the url???
         'status',
         'category',
         'filter',
+        'search',
     ];
     protected $listeners = ['queryStringUpdatedStatus'];//listener which is emitted from StatusFilters
 
@@ -30,6 +32,10 @@ class IdeasIndex extends Component
         $this->resetPage(); // reset pagination when Status filter is changed
     }
     public function updatingFilter() // how is this working??
+    {
+        $this->resetPage();
+    }
+    public function updatingSearch() // how is this working??
     {
         $this->resetPage();
     }
@@ -67,6 +73,10 @@ class IdeasIndex extends Component
                 })
                 ->when($this->filter && $this->filter === 'My Ideas', function($query){
                     return $query->where('user_id', auth()->id());
+                })
+
+                ->when(strlen($this->search) >= 3, function($query){
+                    return $query->where('title', 'LIKE', '%'.$this->search.'%');
                 })
 
                 ->addSelect(['voted_by_user' => Vote::select('id')
