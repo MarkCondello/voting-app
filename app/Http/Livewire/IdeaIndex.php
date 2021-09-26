@@ -21,24 +21,21 @@ class IdeaIndex extends Component
 
     public function vote()
     {
-        if(! auth()->check()){
+        if(!auth()->check()){
             return redirect(route('login'));
         }
         if($this->hasVoted){
             try {
                 $this->idea->removeVote(auth()->user());
-            } catch(VoteNotFoundException $e){
-                //do nothing
+            } catch(VoteNotFoundException $e){ //do nothing
             }
                 $this->votes--;
                 $this->hasVoted = false;
         } else {
             try {
                 $this->idea->vote(auth()->user());
-            } catch(VoteNotFoundException $e){
-                //do nothing
+            } catch(VoteNotFoundException $e){ //do nothing
             }
-            // $this->idea->vote(auth()->user());
             $this->votes++;
             $this->hasVoted = true;
         }

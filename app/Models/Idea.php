@@ -57,7 +57,6 @@ class Idea extends Model
         //'votes' is the pivot table for both users and ideas, so this relationship is a vote belongs to many
     }
     public function vote(User $user){
-
         if($this->isVotedByUser($user)){
             throw new DuplicateVoteException();
         }
